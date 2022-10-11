@@ -1,0 +1,46 @@
+service Wordle {
+    // Start a new game
+    rpc Start (StartRequest) returns (StartResponse) {}
+    // Attempt to guess a word
+    rpc Guess (GuessRequest) returns (GuessResponse) {}
+}
+
+message StartRequest {
+    optional bool hard = 1;
+    optional string name = 2;
+}
+
+message StartResponse {
+    required int32 session = 1;
+    required int32 attempts = 2;
+}
+
+message GuessRequest {
+    required string attempt = 1;
+}
+
+enum GuessResult {
+    NO_MATCH = 0;  // Letter is not present in a word
+    PARTIAL_MATCH = 1;  // Letter is present but misplaced
+    MATCH = 2;  // Letter guessed correctly
+}
+
+message GuessResponseNormal {
+    required int32 attempts = 1;
+    repeated GuessResult result = 2;
+}
+
+message GuessResponseLoss {
+    required string correctWord = 1;
+}
+
+message GuessResponseWin {
+}
+
+message GuessResponse {
+    oneof result {
+        GuessResponseNormal keepGuessing = 1;
+        GuessResponseLoss loss = 2;
+        GuessResponseWin win = 3;
+    }
+}
