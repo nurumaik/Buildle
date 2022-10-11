@@ -10,23 +10,23 @@
 #include <random>
 #include <unordered_map>
 
-class BuildleService: public Buildle::Service {
+class BuildleService: public buildle::Buildle::Service {
 private:
     std::random_device m_rd;
     std::default_random_engine m_engine;
     std::uniform_int_distribution<int> m_words;
     std::uniform_int_distribution<int> m_sessions;
 
-    std::unordered_map<std::int32_t, BuildleGame::Game> m_games;
+    std::unordered_map<std::int32_t, Buildle::Game> m_games;
 
 public:
     BuildleService()
     : m_engine(m_rd())
-    , m_words(0, BuildleGame::Builds.size())
+    , m_words(0, Buildle::Builds.size())
     , m_sessions(0, std::numeric_limits<int32_t>::max()) {}
 
     // Start a new game
-    virtual ::grpc::Status Start(::grpc::ServerContext* context, const ::StartRequest* request, ::StartResponse* response) {
+    virtual ::grpc::Status Start(::grpc::ServerContext* context, const ::buildle::StartRequest* request, ::buildle::StartResponse* response) {
         if (m_games.size() == std::numeric_limits<int32_t>::max()) {
             // Holy shit
             throw "TODO ERROR";
@@ -35,7 +35,7 @@ public:
         while (m_games.contains(session)) {
             session = m_sessions(m_engine);
         }
-        BuildleGame::Game game(request->hard(), BuildleGame::Builds[m_words(m_engine)], request->name());
+        Buildle::Game game(request->hard(), Buildle::Builds[m_words(m_engine)], request->name());
         response->set_letters(game.Correct().size());
         response->set_attempts(game.Attempts());
         m_games.emplace(session, game);
@@ -44,7 +44,7 @@ public:
     }
 
     // Attempt to guess a word
-    virtual ::grpc::Status Guess(::grpc::ServerContext* context, const ::GuessRequest* request, ::GuessResponse* response) {
+    virtual ::grpc::Status Guess(::grpc::ServerContext* context, const ::buildle::GuessRequest* request, ::buildle::GuessResponse* response) {
         int32_t session = request->session();
         auto game = m_games.find(session);
 

@@ -6,14 +6,14 @@
 #include <unordered_set>
 #include <buildle.pb.h>
 
-namespace BuildleGame {
+namespace Buildle {
 
 class Game {
 public:
     Game(bool hard, const std::string& word, const std::string& playerName);
     const std::string& Correct() const;
     const std::string& PlayerName() const;
-    ::GuessResponse Guess(const std::string& attempt);
+    ::buildle::GuessResponse Guess(const std::string& attempt);
     int32_t Attempts() const;
 
 private:

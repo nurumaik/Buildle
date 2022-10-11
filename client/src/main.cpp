@@ -6,11 +6,11 @@
 
 #include <iostream>
 
-void renderResult(const decltype(GuessResponseNormal().result())& result) {
+void renderResult(decltype(buildle::GuessResponseNormal().result())& result) {
     for (auto res: result) {
-        if (res == GuessResult::MATCH) {
+        if (res == ::buildle::GuessResult::MATCH) {
             std::cout << "*";
-        } else if (res == GuessResult::PARTIAL_MATCH) {
+        } else if (res == ::buildle::GuessResult::PARTIAL_MATCH) {
             std::cout << "/";
         } else {
             std::cout << ".";
@@ -22,13 +22,13 @@ int main() {
     // Call
     auto channel = grpc::CreateChannel("localhost:42069", grpc::InsecureChannelCredentials());
 
-    std::unique_ptr<Buildle::Stub> stub = Buildle::NewStub(channel);
+    std::unique_ptr<buildle::Buildle::Stub> stub = buildle::Buildle::NewStub(channel);
 
-    ::StartRequest startReq;
-    ::StartResponse startResp;
+    ::buildle::StartRequest startReq;
+    ::buildle::StartResponse startResp;
 
-    ::GuessRequest guessReq;
-    ::GuessResponse guessResp;
+    ::buildle::GuessRequest guessReq;
+    ::buildle::GuessResponse guessResp;
 
     std::cout << "Guess the build system you will be using in your next C++ project" << std::endl;
 

@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package buildle;
+
 service Buildle {
     // Start a new game
     rpc Start (StartRequest) returns (StartResponse) {}

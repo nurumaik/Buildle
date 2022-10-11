@@ -1,6 +1,6 @@
 #include "config.h"
 
-namespace BuildleGame {
+namespace Buildle {
 
 const std::vector<std::string> Builds = {
     "cmake"s,
