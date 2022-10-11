@@ -1,4 +1,6 @@
-service Wordle {
+syntax = "proto3";
+
+service Buildle {
     // Start a new game
     rpc Start (StartRequest) returns (StartResponse) {}
     // Attempt to guess a word
@@ -6,17 +8,19 @@ service Wordle {
 }
 
 message StartRequest {
-    optional bool hard = 1;
-    optional string name = 2;
+    bool hard = 1;
+    string name = 2;
 }
 
 message StartResponse {
-    required int32 session = 1;
-    required int32 attempts = 2;
+    int32 session = 1;
+    int32 attempts = 2;
+    int32 letters = 3;
 }
 
 message GuessRequest {
-    required string attempt = 1;
+    int32 session = 1;
+    string attempt = 2;
 }
 
 enum GuessResult {
@@ -26,12 +30,13 @@ enum GuessResult {
 }
 
 message GuessResponseNormal {
-    required int32 attempts = 1;
+    int32 attempts = 1;
     repeated GuessResult result = 2;
 }
 
 message GuessResponseLoss {
-    required string correctWord = 1;
+    string correct_word = 1;
+    repeated GuessResult result = 2;
 }
 
 message GuessResponseWin {
@@ -39,7 +44,7 @@ message GuessResponseWin {
 
 message GuessResponse {
     oneof result {
-        GuessResponseNormal keepGuessing = 1;
+        GuessResponseNormal keep_guessing = 1;
         GuessResponseLoss loss = 2;
         GuessResponseWin win = 3;
     }
